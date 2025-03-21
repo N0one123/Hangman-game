@@ -365,7 +365,7 @@ function setMultiplayerWord() {
   let customWord = inputField.value.trim().toUpperCase();
 
   if (!/^[A-Z]+$/.test(customWord)) {
-    alert("Invalid word! Please enter only letters.");
+    alert("Invalid word! Please enter only letters without spaces..");
     return;
   }
 
