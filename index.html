@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hangman Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #87CEEB;
+      color: #333;
+    }
+    .container {
+      margin-top: 50px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: inline-block;
+    }
+    .word-display {
+      font-size: 2em;
+      margin: 20px 0;
+      letter-spacing: 5px;
+    }
+    .letters button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 1.2em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .letters button:hover {
+      background-color: #45a049;
+    }
+    .letters button:disabled {
+      background-color: #ccc;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+    canvas {
+      background-color: #00008B;
+      border-radius: 5px;
+      border: 2px solid black;
+      margin-top: 20px;
+    }
+    #settingsOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#settingsPanel {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 50%;
+  text-align: center;
+  position: relative;
+}
+
+#closeSettings {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: red;
+  color: white;
+  font-size: 16px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+    button {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin: 5px;
+}
+
+button:hover {
+  background-color: #32cd32;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+select {
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+}
+    
+#wordVisibility {
+  background-color: #8b0000;
+}
+    
+#wordVisibility:hover {
+  background-color: #5b0000;
+}
+    
+    body.dark-mode {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.dark-mode .container {
+  background: #333;
+  color: white;
+}
+
+.dark-mode button {
+  background-color: #555;
+}
+
+.dark-mode button:hover {
+  background-color: #777;
+}
+
+.dark-mode select {
+  background-color: #444;
+  color: white;
+}
+
+.dark-mode canvas {
+  background-color: #222;
+  border-color: white;
+}
+
+.dark-mode #settingsPanel {
+  background: #444;
+}
+
+.dark-mode #closeSettings {
+  background: darkred;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hangman Game</h1> 
+    <button onclick="toggleSettings()">Settings</button>
+
+<div id="settingsOverlay">
+  <div id="settingsPanel">
+    <button id="closeSettings" onclick="toggleSettings()">✖</button>
+    <h2>Setting Up!</h2>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button id="toggleHintsBtn" onclick="toggleHints()">Show Hints</button>
+    <button id="wordVisibility" onclick="toggleWordVisibility()">Show/Hide Word</button>
+  </div>
+</div>
+
+<br>
+    <label for="category">Choose a category:</label>
+    <select id="category">
+      <option value="coding">Coding Languages</option>
+      <option value="fruits">Fruits</option>
+      <option value="countries">Countries</option>
+      <option value="animals">Animals</option>
+      <option value="school">School Requirements</option>
+      <option value="sports">Sports</option>
+      <option value="music">Musical Intruments</option>
+    </select>
+    <button onclick="startGame()">Start Game/Refresh Word</button>
+    <button onclick="startMultiplayer()">Multiplayer Mode</button>
+    <br>
+    <canvas id="hangmanCanvas" width="200" height="250"></canvas>
+    <p class="word-display" id="word-display">_ _ _ _</p>
+    <p class="wordHints" id="wordHints">Hints</p>
+    <div class="letters" id="letters"></div>
+    <p class="message" id="message"></p>
+  </div>
+  <script>
+    let hintsEnabled = false;
+
+function toggleSettings() {
+  let overlay = document.getElementById("settingsOverlay");
+  overlay.style.display = overlay.style.display === "flex" ? "none" : "flex";
+}
+
+    let wordVisible = false;
+
+function toggleWordVisibility() {
+  if (chosenWord) {
+    wordVisible = !wordVisible;
+    document.getElementById("word-display").textContent = wordVisible ? chosenWord : guessedWord.join(" ");
+  }
+}
+
+
+function toggleHints() {
+  hintsEnabled = !hintsEnabled; 
+  document.getElementById("wordHints").style.display = hintsEnabled ? "block" : "none";
+  
+  // Update button text
+  document.getElementById("toggleHintsBtn").textContent = hintsEnabled ? "Hide Hints" : "Show Hints";
+}
+
+// Ensure hints are hidden at the start
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("wordHints").style.display = "none";
+});
+
+
+
+    const wordCategories = {
+      coding: ["JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT"],
+      fruits: ["APPLE", "BANANA", "CHERRY", "GRAPE", "ORANGE", "PINEAPPLE", "MANGO", "STRAWBERRY"],
+      countries: ["INDIA", "AMERICA", "FRANCE", "RUSSIA", "BRAZIL", "GERMANY", "CANADA", "JAPAN"],
+      animals: ["TIGER", "ELEPHANT", "GIRAFFE", "LION", "HORSE", "PANDA", "ZEBRA", "DOLPHIN"],
+      school: ["PENCIL", "ERASER", "BOOK", "RULER", "SHARPENER", "MARKER", "NOTEBOOK", "BACKPACK"],
+      sports: ["CRICKET", "FOOTBALL", "BASKETBALL", "HOCKEY", "TENNIS", "BADMINTON"],
+      music: ["PIANO", "GUITAR", "DRUMS", "FLUTE", "VIOLIN"]
+    };
+
+const wordHints = {
+  coding: {
+    "JAVASCRIPT": "Popular for web development",
+    "PYTHON": "Great for AI and data science",
+    "HTML": "Standard markup language for web pages",
+    "CSS": "Used for styling web pages",
+    "JAVA": "Widely used in Android development",
+    "RUBY": "Known for simplicity and Rails framework",
+    "SWIFT": "Used for iOS app development"
+  },
+  fruits: {
+    "APPLE": "Keeps the doctor away",
+    "BANANA": "A monkey’s favorite",
+    "CHERRY": "Small, red, and often on cakes",
+    "GRAPE": "Used to make wine",
+    "ORANGE": "A citrus fruit with vitamin C",
+    "PINEAPPLE": "Has a rough exterior and sweet inside",
+    "MANGO": "The king of fruits",
+    "STRAWBERRY": "Red, heart-shaped, and juicy"
+  },
+  countries: {
+    "INDIA": "Home to the Taj Mahal",
+    "AMERICA": "Land of the free",
+    "FRANCE": "Famous for the Eiffel Tower",
+    "RUSSIA": "Largest country in the world",
+    "BRAZIL": "Known for football and the Amazon rainforest",
+    "GERMANY": "Famous for cars and Oktoberfest",
+    "CANADA": "Maple syrup and polite people",
+    "JAPAN": "Land of the rising sun"
+  },
+  animals: {
+    "TIGER": "Big striped cat",
+    "ELEPHANT": "Largest land animal",
+    "GIRAFFE": "Tallest animal",
+    "LION": "King of the jungle",
+    "HORSE": "Often used for riding and racing",
+    "PANDA": "Loves eating bamboo",
+    "ZEBRA": "Striped like a barcode",
+    "DOLPHIN": "Smart marine mammal"
+  },
+  school: {
+    "PENCIL": "Used to write and erase",
+    "ERASER": "Fixes mistakes",
+    "BOOK": "Full of knowledge",
+    "RULER": "Used to draw straight lines",
+    "SHARPENER": "Keeps pencils sharp",
+    "MARKER": "Used for whiteboards",
+    "NOTEBOOK": "Used for taking notes",
+    "BACKPACK": "Carries all your school supplies"
+  },
+  sports: {
+    "CRICKET": "Popular in India and England",
+    "FOOTBALL": "Played with a round ball and goals",
+    "BASKETBALL": "Shoot hoops to score points",
+    "HOCKEY": "Played on ice or field",
+    "TENNIS": "Uses a racket and a yellow ball",
+    "BADMINTON": "Played with a shuttlecock"
+  },
+  music: {
+    "PIANO": "Has black and white keys",
+    "GUITAR": "Has strings and is strummed",
+    "DRUMS": "Played by hitting with sticks",
+    "FLUTE": "A wind instrument",
+    "VIOLIN": "Played with a bow"
+  }
+};
+
+
+// Function to show hint 
+function showHint() {
+  const category = document.getElementById("category").value;
+  if (wordHints[category] && wordHints[category][chosenWord]) {
+    document.getElementById("wordHints").textContent = "Hint: " + wordHints[category][chosenWord];
+  }
+}
+
+    let chosenWord = "";
+    let guessedWord = [];
+    let attempts = 6;
+    const canvas = document.getElementById("hangmanCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function startGame() {
+      const category = document.getElementById("category").value;
+      chosenWord = wordCategories[category][Math.floor(Math.random() * wordCategories[category].length)];
+      guessedWord = Array(chosenWord.length).fill("_");
+      attempts = 6;
+      document.getElementById("word-display").textContent = guessedWord.join(" ");
+      document.getElementById("message").textContent = "";
+      document.getElementById("letters").innerHTML = "";
+      createLetterButtons();
+      drawBase();
+      showHint();
+    }
+function startMultiplayer() {
+  if (!document.getElementById("multiplayerContainer")) {
+    let multiplayerContainer = document.createElement("div");
+    multiplayerContainer.id = "multiplayerContainer";
+
+    let label = document.createElement("p");
+    label.textContent = "Player 1, enter a word for Player 2:";
+
+    let inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.id = "multiplayerWord";
+    inputField.placeholder = "Enter word...";
+    inputField.maxLength = 15;
+
+    let startButton = document.createElement("button");
+    startButton.textContent = "Start Game";
+    startButton.onclick = setMultiplayerWord;
+
+    multiplayerContainer.appendChild(label);
+    multiplayerContainer.appendChild(inputField);
+    multiplayerContainer.appendChild(startButton);
+
+    document.body.appendChild(multiplayerContainer);
+  }
+}
+
+
+function setMultiplayerWord() {
+  let inputField = document.getElementById("multiplayerWord");
+  let customWord = inputField.value.trim().toUpperCase();
+
+  if (!/^[A-Z]+$/.test(customWord)) {
+    alert("Invalid word! Please enter only letters.");
+    return;
+  }
+
+  chosenWord = customWord;
+  guessedWord = Array(chosenWord.length).fill("_");
+  attempts = 6;
+
+  document.getElementById("word-display").textContent = guessedWord.join(" ");
+  document.getElementById("message").textContent = "";
+  document.getElementById("letters").innerHTML = "";
+  createLetterButtons();
+  drawBase();
+
+  inputField.parentElement.remove(); // Remove input field after setting the word
+}
+
+
+
+
+    function createLetterButtons() {
+      const lettersContainer = document.getElementById("letters");
+      lettersContainer.innerHTML = "";
+      for (let i = 65; i <= 90; i++) {
+        let button = document.createElement("button");
+        button.textContent = String.fromCharCode(i);
+        button.onclick = function () { guessLetter(this.textContent, this); };
+        lettersContainer.appendChild(button);
+      }
+    }
+
+    function guessLetter(letter, button) {
+      button.disabled = true;
+      if (chosenWord.includes(letter)) {
+        chosenWord.split("").forEach((char, index) => {
+          if (char === letter) guessedWord[index] = letter;
+        });
+      } else {
+        attempts--;
+        drawHangman();
+      }
+      updateDisplay();
+    }
+
+function updateDisplay() {
+  document.getElementById("word-display").textContent = guessedWord.join(" ");
+  showHint();
+  if (!guessedWord.includes("_")) {
+    document.getElementById("message").textContent = "You Win! You had " + attempts + " attempts left!";
+    disableAllButtons();
+  } else if (attempts == 0) {
+    document.getElementById("message").textContent = "Game Over! The word was " + chosenWord;
+    disableAllButtons();
+  }
+}
+
+function disableAllButtons() {
+  document.querySelectorAll(".letters button").forEach(button => button.disabled = true);
+}
+
+
+    function drawBase() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(40, 200, 120, 10);
+      ctx.beginPath();
+      ctx.moveTo(100, 200);
+      ctx.lineTo(100, 50);
+      ctx.lineTo(150, 50);
+      ctx.lineTo(150, 70);
+      ctx.stroke();
+    }
+
+    function drawHangman() {
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 3;
+      if (attempts === 5) {
+        ctx.beginPath();
+        ctx.arc(150, 85, 15, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (attempts === 4) {
+        ctx.moveTo(150, 100);
+        ctx.lineTo(150, 150);
+        ctx.stroke();
+      } else if (attempts === 3) {
+        ctx.moveTo(150, 110);
+        ctx.lineTo(130, 130);
+        ctx.stroke();
+      } else if (attempts === 2) {
+        ctx.moveTo(150, 110);
+        ctx.lineTo(170, 130);
+        ctx.stroke();
+      } else if (attempts === 1) {
+        ctx.moveTo(150, 150);
+        ctx.lineTo(130, 180);
+        ctx.stroke();
+      } else if (attempts === 0) {
+        ctx.moveTo(150, 150);
+        ctx.lineTo(170, 180);
+        ctx.stroke();
+      }
+    }
+    function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+}
+
+  </script>
+</body>
+</html>
+
