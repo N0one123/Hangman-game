@@ -478,6 +478,9 @@ document.addEventListener("keydown", function(event) {
 });
 
 
+const clickSound = new Audio('click.mp3');
+clickSound.volume = 0.5;
+
 function createLetterButtons() {
   const lettersContainer = document.getElementById("letters");
   lettersContainer.innerHTML = "";
@@ -486,8 +489,9 @@ function createLetterButtons() {
     let button = document.createElement("button");
     button.textContent = String.fromCharCode(i);
     
-    // Click event with highlight effect
     button.onclick = function () { 
+      clickSound.currentTime = 0;
+      clickSound.play();
       applyButtonEffect(button); 
       guessLetter(this.textContent, this);
     };
@@ -584,31 +588,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("dark-mode");
     }
 });
-
-
-
-const clickSound = new Audio('click.mp3');
-clickSound.volume = 0.5;
-
-function createLetterButtons() {
-  const lettersContainer = document.getElementById("letters");
-  lettersContainer.innerHTML = "";
-
-  for (let i = 65; i <= 90; i++) {
-    let button = document.createElement("button");
-    button.textContent = String.fromCharCode(i);
-    
-    button.onclick = function () { 
-      clickSound.currentTime = 0;
-      clickSound.play();
-      applyButtonEffect(button); 
-      guessLetter(this.textContent, this);
-    };
-
-    lettersContainer.appendChild(button);
-  }
-}
-
 
   </script>
 </body>
