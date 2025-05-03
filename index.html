@@ -214,7 +214,7 @@ function toggleSettings() {
 
 function toggleWordVisibility() {
   if (chosenWord) {
-    wordVisible = !wordVisible;
+    wordVisible = !wordVijsible;
     document.getElementById("word-display").textContent = wordVisible ? chosenWord : guessedWord.join(" ");
   }
 }
@@ -321,7 +321,7 @@ music: {
   "SAXOPHONE": "A jazz instrument with a curved shape",
   "CELLO": "A large string instrument played sitting down",
   "HARP": "An instrument with strings played by plucking",
-  "XYLOPHONE": "A percussion instrument with wooden bars",
+  "XYLOPHONE": "Has wooden bars",
   "TROMBONE": "A brass instrument with a sliding tube",
   "BASS": "A deep-sounding string instrument",
   "SYNTHESIZER": "An electronic instrument used in pop music",
@@ -331,7 +331,7 @@ music: {
     "MOBILE": "A pocket sized device",
     "LAPTOP": "A pottable computer",
     "TABLET": "A device that has a larger screen than a mobile",
-    "SMARTWATCH": "Worn on the wrist",
+    "SMARTWATCH": "Smart device worn on the wrist",
     "HEADPHONES": "Speakers on the head",
     "CONSOLE": "PlayStation and Xbox are examples of this",
     "DRONE": "A flying gadget",
