@@ -490,7 +490,7 @@ function createLetterButtons() {
     button.textContent = String.fromCharCode(i);
     
     button.onclick = function () { 
-      clickSound.currentTime = 0.02;
+      clickSound.currentTime = 0.005;
       clickSound.play();
       applyButtonEffect(button); 
       guessLetter(this.textContent, this);
