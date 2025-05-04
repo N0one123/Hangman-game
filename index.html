@@ -220,7 +220,7 @@ function toggleSettings() {
 
 function toggleWordVisibility() {
   if (chosenWord) {
-    wordVisible = !wordVijsible;
+    wordVisible = !wordVisible;
     document.getElementById("word-display").textContent = wordVisible ? chosenWord : guessedWord.join(" ");
   }
 }
