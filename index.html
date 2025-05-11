@@ -177,6 +177,7 @@ select {
     <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <button id="toggleHintsBtn" onclick="toggleHints()">Show Hints</button>
     <button id="wordVisibility" onclick="toggleWordVisibility()">Show/Hide Word</button>
+    <button onclick="resetScore()">Reset Score</button>
   </div>
 </div>
 
@@ -201,6 +202,7 @@ select {
     <p class="wordHints" id="wordHints">Hints</p>
     <div class="letters" id="letters"></div>
     <p class="message" id="message"></p>
+    <p id="scoreDisplay">Wins: 0 | Losses: 0</p>
   </div>
   
 <audio id="clickSound" src="click.mp3"></audio>
@@ -209,6 +211,9 @@ select {
 
 
   <script>
+	  let winCount = parseInt(localStorage.getItem('wins')) || 0;
+let lossCount = parseInt(localStorage.getItem('losses')) || 0;
+
     let hintsEnabled = false;
 
 function toggleSettings() {
@@ -408,7 +413,44 @@ function startGame() {
   showHint();
 }
 
+function checkGameOver() {
+  if (!guessedWord.includes("_")) {
+    handleWin();
+  } else if (attempts === 0) {
+    handleLoss();
+  }
+}
 
+function handleWin() {
+  document.getElementById("message").textContent = "You Win!";
+  winCount++;
+  localStorage.setItem('wins', winCount);
+  showScore();
+  document.getElementById("winSound").play();
+}
+
+function handleLoss() {
+  document.getElementById("message").textContent = `You Lose! The word was: ${chosenWord}`;
+  lossCount++;
+  localStorage.setItem('losses', lossCount);
+  showScore();
+  document.getElementById("loseSound").play();
+}
+
+function showScore() {
+  document.getElementById("scoreDisplay").textContent =
+    `Wins: ${winCount} | Losses: ${lossCount}`;
+}
+	  
+function resetScore() {
+  winCount = 0;
+  lossCount = 0;
+  localStorage.setItem('wins', 0);
+  localStorage.setItem('losses', 0);
+  showScore();
+}
+
+	  
 function startMultiplayer() {
   if (!document.getElementById("multiplayerContainer")) {
     let multiplayerContainer = document.createElement("div");
@@ -497,6 +539,7 @@ function createLetterButtons() {
     };
 
     lettersContainer.appendChild(button);
+	  showScore();
   }
 }
 
