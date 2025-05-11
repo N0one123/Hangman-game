@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -376,10 +377,10 @@ function showHint() {
 
     let chosenWord = "";
     let guessedWord = [];
-    attempts = 6;
+    let attempts = 6;
     const canvas = document.getElementById("hangmanCanvas");
     const ctx = canvas.getContext("2d");
-lastWords = []; // Store the last 3 words
+let lastWords = []; // Store the last 3 words
 
 function startGame() {
   const category = document.getElementById("category").value;
@@ -499,67 +500,20 @@ function createLetterButtons() {
     lettersContainer.appendChild(button);
   }
 }
-function checkGameOver() {
-  if (!guessedWord.includes("_")) {
-    handleWin();
-  } else if (attempts === 0) {
-    handleLoss();
-  }
-}
 
-function handleWin() {
-  document.getElementById("message").textContent = "You Win!";
-  winCount++;
-  localStorage.setItem('wins', winCount);
-  showScore();
-  document.getElementById("winSound").play();
-}
 
-function handleLoss() {
-  document.getElementById("message").textContent = `You Lose! The word was: ${chosenWord}`;
-  lossCount++;
-  localStorage.setItem('losses', lossCount);
-  showScore();
-  document.getElementById("loseSound").play();
-}
-
-let devClickBuffer = [];
-let devClickStartTime = null;
-
-function trackDevSequence(letter) {
-  const now = Date.now();
-
-  if (!devClickStartTime || now - devClickStartTime > 3000) {
-    devClickBuffer = [];
-    devClickStartTime = now;
-  }
-
-  devClickBuffer.push(letter);
-
-  if (devClickBuffer.join('') === 'dev') {
-    alert("Hello Developer");
-    devClickBuffer = [];
-    devClickStartTime = null;
-  }
-}
-
-function guessLetter(letter, button) {
-  trackDevSequence(letter); // Detect DEV
-  button.disabled = true;
-  if (chosenWord.includes(letter)) {
-    for (let i = 0; i < chosenWord.length; i++) {
-      if (chosenWord[i] === letter) {
-        guessedWord[i] = letter;
+    function guessLetter(letter, button) {
+      button.disabled = true;
+      if (chosenWord.includes(letter)) {
+        chosenWord.split("").forEach((char, index) => {
+          if (char === letter) guessedWord[index] = letter;
+        });
+      } else {
+        attempts--;
+        drawHangman();
       }
+      updateDisplay();
     }
-    updateWordDisplay();
-  } else {
-    attempts--;
-    drawHangmanPart();
-  }
-  checkGameOver();
-}
-
 
 document.getElementById("winSound").play(); // for win
 document.getElementById("loseSound").play(); // for game over
@@ -639,4 +593,3 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
 </body>
 </html>
-
