@@ -177,7 +177,6 @@ select {
     <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
     <button id="toggleHintsBtn" onclick="toggleHints()">Show Hints</button>
     <button id="wordVisibility" onclick="toggleWordVisibility()">Show/Hide Word</button>
-    <button onclick="resetScore()">Reset Score</button>
   </div>
 </div>
 
@@ -202,7 +201,6 @@ select {
     <p class="wordHints" id="wordHints">Hints</p>
     <div class="letters" id="letters"></div>
     <p class="message" id="message"></p>
-    <p id="scoreDisplay">Wins: 0 | Losses: 0 (WIP)</p>
   </div>
   
 <audio id="clickSound" src="click.mp3"></audio>
@@ -211,9 +209,6 @@ select {
 
 
   <script>
-	  let winCount = parseInt(localStorage.getItem('wins')) || 0;
-let lossCount = parseInt(localStorage.getItem('losses')) || 0;
-
     let hintsEnabled = false;
 
 function toggleSettings() {
@@ -381,10 +376,10 @@ function showHint() {
 
     let chosenWord = "";
     let guessedWord = [];
-    let attempts = 6;
+    attempts = 6;
     const canvas = document.getElementById("hangmanCanvas");
     const ctx = canvas.getContext("2d");
-let lastWords = []; // Store the last 3 words
+lastWords = []; // Store the last 3 words
 
 function startGame() {
   const category = document.getElementById("category").value;
@@ -413,44 +408,7 @@ function startGame() {
   showHint();
 }
 
-function checkGameOver() {
-  if (!guessedWord.includes("_")) {
-    handleWin();
-  } else if (attempts === 0) {
-    handleLoss();
-  }
-}
 
-function handleWin() {
-  document.getElementById("message").textContent = "You Win!";
-  winCount++;
-  localStorage.setItem('wins', winCount);
-  showScore();
-  document.getElementById("winSound").play();
-}
-
-function handleLoss() {
-  document.getElementById("message").textContent = `You Lose! The word was: ${chosenWord}`;
-  lossCount++;
-  localStorage.setItem('losses', lossCount);
-  showScore();
-  document.getElementById("loseSound").play();
-}
-
-function showScore() {
-  document.getElementById("scoreDisplay").textContent =
-    `Wins: ${winCount} | Losses: ${lossCount}`;
-}
-	  
-function resetScore() {
-  winCount = 0;
-  lossCount = 0;
-  localStorage.setItem('wins', 0);
-  localStorage.setItem('losses', 0);
-  showScore();
-}
-
-	  
 function startMultiplayer() {
   if (!document.getElementById("multiplayerContainer")) {
     let multiplayerContainer = document.createElement("div");
@@ -539,23 +497,69 @@ function createLetterButtons() {
     };
 
     lettersContainer.appendChild(button);
-	  showScore();
+  }
+}
+function checkGameOver() {
+  if (!guessedWord.includes("_")) {
+    handleWin();
+  } else if (attempts === 0) {
+    handleLoss();
   }
 }
 
+function handleWin() {
+  document.getElementById("message").textContent = "You Win!";
+  winCount++;
+  localStorage.setItem('wins', winCount);
+  showScore();
+  document.getElementById("winSound").play();
+}
 
-    function guessLetter(letter, button) {
-      button.disabled = true;
-      if (chosenWord.includes(letter)) {
-        chosenWord.split("").forEach((char, index) => {
-          if (char === letter) guessedWord[index] = letter;
-        });
-      } else {
-        attempts--;
-        drawHangman();
+function handleLoss() {
+  document.getElementById("message").textContent = `You Lose! The word was: ${chosenWord}`;
+  lossCount++;
+  localStorage.setItem('losses', lossCount);
+  showScore();
+  document.getElementById("loseSound").play();
+}
+
+let devClickBuffer = [];
+let devClickStartTime = null;
+
+function trackDevSequence(letter) {
+  const now = Date.now();
+
+  if (!devClickStartTime || now - devClickStartTime > 3000) {
+    devClickBuffer = [];
+    devClickStartTime = now;
+  }
+
+  devClickBuffer.push(letter);
+
+  if (devClickBuffer.join('') === 'dev') {
+    alert("Hello Developer");
+    devClickBuffer = [];
+    devClickStartTime = null;
+  }
+}
+
+function guessLetter(letter, button) {
+  trackDevSequence(letter); // Detect DEV
+  button.disabled = true;
+  if (chosenWord.includes(letter)) {
+    for (let i = 0; i < chosenWord.length; i++) {
+      if (chosenWord[i] === letter) {
+        guessedWord[i] = letter;
       }
-      updateDisplay();
     }
+    updateWordDisplay();
+  } else {
+    attempts--;
+    drawHangmanPart();
+  }
+  checkGameOver();
+}
+
 
 document.getElementById("winSound").play(); // for win
 document.getElementById("loseSound").play(); // for game over
@@ -635,3 +639,4 @@ document.addEventListener("DOMContentLoaded", () => {
   </script>
 </body>
 </html>
+
