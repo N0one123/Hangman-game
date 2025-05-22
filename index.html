@@ -420,23 +420,23 @@ function showHint() {
     let attempts = 6;
     const canvas = document.getElementById("hangmanCanvas");
     const ctx = canvas.getContext("2d");
-let lastWords = []; // Store the last 3 words
+let lastWords = []; // Store the last 5 words
 
 function startGame() {
   const category = document.getElementById("category").value;
   let words = wordCategories[category];
 
-  if (words.length <= 3) { 
-    // If there are 3 or fewer words, just pick randomly (avoid infinite loop)
+  if (words.length <= 5) { 
+    // If there are 5 or fewer words, just pick randomly (avoid infinite loop)
     chosenWord = words[Math.floor(Math.random() * words.length)];
   } else {
     do {
       chosenWord = words[Math.floor(Math.random() * words.length)];
-    } while (lastWords.includes(chosenWord)); // Ensure the word is not in the last 3
+    } while (lastWords.includes(chosenWord)); // Ensure the word is not in the last 5
   }
 
   lastWords.push(chosenWord); // Add new word to history
-  if (lastWords.length > 3) lastWords.shift(); // Keep only the last 3 words
+  if (lastWords.length > 5) lastWords.shift(); // Keep only the last 5 words
 
   guessedWord = Array(chosenWord.length).fill("_");
   attempts = 6;
