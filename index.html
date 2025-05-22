@@ -123,6 +123,26 @@ select {
 #wordVisibility:hover {
   background-color: #5b0000;
 }
+    .popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 2px solid black;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
     
     body.dark-mode {
   background-color: #1e1e1e;
@@ -168,7 +188,7 @@ select {
 </head>
 <body>
   <div class="container">
-    <h1>Hangman Game</h1> 
+    <h1>Hangman</h1> 
     <button onclick="toggleSettings()">Settings</button>
 
 <div id="settingsOverlay">
@@ -180,7 +200,13 @@ select {
     <button id="wordVisibility" onclick="toggleWordVisibility()">Show/Hide Word</button>
   </div>
 </div>
-
+<div id="scoreboard" class="popup hidden">
+  <h2>Scoreboard</h2>
+  <p>Wins: <span id="wins">0</span></p>
+  <p>Losses: <span id="losses">0</span></p>
+  <button onclick="closeScoreboard()">Close</button>
+</div>
+<button id="scoreboardButton" onclick="openScoreboard()">🏆 Scoreboard</button>
 <br>
     <label for="category">Choose a category:</label>
     <select id="category">
@@ -190,7 +216,7 @@ select {
       <option value="animals">Animals</option>
       <option value="school">School Requirements</option>
       <option value="sports">Sports</option>
-      <option value="music">Musical Intruments</option>
+      <option value="music">Musical Instruments</option>
       <option value="gadgets">Gadgets</option>
       <option value="vehicles">Vehicles</option>
     </select>
@@ -256,7 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const wordHints = {
   coding: {
-    "JAVASCRIPT": "Used for making scripts and User Interference",
+    "JAVASCRIPT": "Used for scripting and user interaction",
     "PYTHON": "Great for AI and data science",
     "HTML": "Standard markup language for web pages",
     "CSS": "Used for styling web pages",
@@ -336,7 +362,7 @@ music: {
 },
     gadgets: {
     "MOBILE": "A pocket sized device",
-    "LAPTOP": "A pottable computer",
+    "LAPTOP": "A portable computer",
     "TABLET": "A device that has a larger screen than a mobile",
     "SMARTWATCH": "Smart device worn on the wrist",
     "HEADPHONES": "Speakers on the head",
@@ -353,7 +379,7 @@ music: {
     "MOTORCYCLE": "A two-wheeled vehicle known for speed and agility",
     "CYCLE": "A manual vehicle powered by pedaling",
     "AIRPLANE": "Needs a runway",
-    "HELICOPTER": "They land ot takeoff vertically",
+    "HELICOPTER": "They land or takeoff vertically",
     "TRUCK": "Used for transporting heavy goods",
     "TRAIN": "Moves on tracks",
     "SUBWAY": "An underground train system",
@@ -525,10 +551,18 @@ function updateDisplay() {
     document.getElementById("message").textContent = "You Win! You had " + attempts + " attempts left!";
 	document.getElementById("winSound").play();
     disableAllButtons();
+    wins++;
+localStorage.setItem("wins", wins);
+updateScoreboard();
+
   } else if (attempts == 0) {
     document.getElementById("message").textContent = "Game Over! The word was " + chosenWord;
 	document.getElementById("loseSound").play();
     disableAllButtons();
+    losses++;
+localStorage.setItem("losses", losses);
+updateScoreboard();
+
   }
 }
 
@@ -589,6 +623,25 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.add("dark-mode");
     }
 });
+    
+let wins = 0;
+let losses = 0;
+
+function openScoreboard() {
+  document.getElementById("scoreboard").classList.remove("hidden");
+  updateScoreboard();
+}
+
+function closeScoreboard() {
+  document.getElementById("scoreboard").classList.add("hidden");
+}
+
+function updateScoreboard() {
+  document.getElementById("wins").textContent = wins;
+  document.getElementById("losses").textContent = losses;
+}
+ let wins = parseInt(localStorage.getItem("wins")) || 0;
+let losses = parseInt(localStorage.getItem("losses")) || 0;
 
   </script>
 </body>
