@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -642,6 +641,8 @@ function updateScoreboard() {
 }
 wins = parseInt(localStorage.getItem("wins")) || 0;
 losses = parseInt(localStorage.getItem("losses")) || 0;
+
+updateScoreboard(); // Call once on page load to reflect stored values
 
   </script>
 </body>
