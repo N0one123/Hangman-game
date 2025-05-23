@@ -232,7 +232,7 @@ select {
       <option value="sports">Sports</option>
       <option value="music">Musical Instruments</option>
       <option value="gadgets">Gadgets</option>
-      <option value="vehicles">Vehicles</option>
+      <option value="transport">Transportation</option>
     </select>
     <button onclick="startGame()">Start Game/Refresh Word</button>
     <button onclick="startMultiplayer()">Multiplayer Mode</button>
@@ -283,16 +283,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     const wordCategories = {
-      coding: ["JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT"],
-      fruits: ["APPLE", "BANANA", "CHERRY", "GRAPE", "ORANGE", "PINEAPPLE", "MANGO", "STRAWBERRY"],
-      countries: ["INDIA", "AMERICA", "FRANCE", "RUSSIA", "BRAZIL", "GERMANY", "CANADA", "JAPAN"],
-      animals: ["TIGER", "ELEPHANT", "GIRAFFE", "LION", "HORSE", "PANDA", "ZEBRA", "DOLPHIN"],
-      school: ["PENCIL", "ERASER", "BOOK", "RULER", "SHARPENER", "MARKER", "NOTEBOOK", "BACKPACK"],
-      sports: ["CRICKET", "FOOTBALL", "BASKETBALL", "HOCKEY", "TENNIS", "BADMINTON", "BASEBALL", "GOLF", "SWIMMING", "SKATING", "VOLLEYBALL", "KARATE"],
-      music: ["PIANO", "GUITAR", "DRUMS", "FLUTE", "VIOLIN", "TRUMPET", "SAXOPHONE", "CELLO", "HARP", "XYLOPHONE", "TROMBONE", "BASS", "SYNTHESIZER", "ACCORDION"],
-      gadgets: ["MOBILE", "LAPTOP", "TABLET", "SMARTWATCH", "HEADPHONES", "CONSOLE", "DRONE", "WEBCAM", "PROJECTOR", "HEADSET", "SPEAKER", "CAMERA"],
-      vehicles: ["CAR", "MOTORCYCLE", "CYCLE", "AIRPLANE", "HELICOPTER", "TRUCK", "TRAIN", "SUBWAY", "SHIP", "YACHT", "BUS", "TRACTOR", "TANK"]
-    };
+coding: [
+  "JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT", "TYPESCRIPT", "CPLUSPLUS",
+  "PHP", "SQL", "KOTLIN", "RUST", "PERL", "SCALA", "OBJECTIVEC", "MATLAB", "DART"
+],
+
+fruits: [
+  "APPLE", "BANANA", "CHERRY", "GRAPE", "ORANGE", "PINEAPPLE", "MANGO", "STRAWBERRY",
+  "WATERMELON", "BLUEBERRY", "RASPBERRY", "PEACH", "PLUM", "KIWI", "PAPAYA",
+  "DATE", "LYCHEE", "COCONUT", "APRICOT"
+],
+
+countries: [
+  "INDIA", "AMERICA", "FRANCE", "RUSSIA", "BRAZIL", "GERMANY", "CANADA", "JAPAN",
+  "CHINA", "AUSTRALIA", "EGYPT", "MEXICO", "SPAIN", "ITALY", "ARGENTINA", "NIGERIA",
+  "THAILAND", "SOUTHAFRICA", "COLOMBIA", "PERU"
+],
+
+animals: [
+  "TIGER", "ELEPHANT", "GIRAFFE", "LION", "HORSE", "PANDA", "ZEBRA", "DOLPHIN",
+  "KANGAROO", "CROCODILE", "LEOPARD", "CHEETAH", "SQUIRREL", "OSTRICH", "RHINOCEROS",
+  "BUFFALO", "WOLF", "BEAR", "MONKEY"
+],
+
+school: [
+  "PENCIL", "ERASER", "BOOK", "RULER", "SHARPENER", "MARKER", "NOTEBOOK", "BACKPACK",
+  "GLUE", "SCISSORS", "HIGHLIGHTER", "PROTRACTOR", "STAPLER", "TAPE",
+  "CRAYONS", "FOLDER", "PEN"
+],
+
+sports: [
+  "CRICKET", "FOOTBALL", "BASKETBALL", "HOCKEY", "TENNIS", "BADMINTON", "BASEBALL",
+  "GOLF", "SWIMMING", "SKATING", "VOLLEYBALL", "KARATE", "RUGBY", "WRESTLING",
+  "BOXING", "CYCLING", "DIVING"
+],
+
+music: [
+  "PIANO", "GUITAR", "DRUMS", "FLUTE", "VIOLIN", "TRUMPET", "SAXOPHONE", "CELLO",
+  "HARP", "XYLOPHONE", "TROMBONE", "BASS", "SYNTHESIZER", "ACCORDION", "CLARINET",
+  "BANJO", "MANDOLIN"
+],
+
+gadgets: [
+  "MOBILE", "LAPTOP", "TABLET", "SMARTWATCH", "HEADPHONES", "CONSOLE", "DRONE",
+  "WEBCAM", "PROJECTOR", "HEADSET", "SPEAKER", "CAMERA", "MICROPHONE", "GAMEPAD",
+  "TELEVISON", "EARPHONE", "MONITOR"
+],
+
+transport: [
+  "CAR", "MOTORCYCLE", "CYCLE", "AIRPLANE", "HELICOPTER", "TRUCK", "TRAIN", "SUBWAY",
+  "SHIP", "YACHT", "BUS", "TRACTOR", "TANK", "SCOOTER", "JET", "FERRY", "VAN",
+  "LIMOUSINE", "SNOWMOBILE", "BUGGY"
+]
+    }
+
 
 const wordHints = {
   coding: {
@@ -302,110 +346,190 @@ const wordHints = {
     "CSS": "Used for styling web pages",
     "JAVA": "Widely used in Android development",
     "RUBY": "Known for simplicity and Rails framework",
-    "SWIFT": "Used for iOS app development"
+    "SWIFT": "Used for iOS app development",
+    "TYPESCRIPT": "Adds static typing to JavaScript",
+    "CPLUSPLUS": "Extension of C with object-oriented features",
+    "PHP": "Server-side scripting language",
+    "SQL": "Used for managing databases",
+    "KOTLIN": "Modern language for Android",
+    "RUST": "Memory-safe systems programming",
+    "PERL": "Text processing language",
+    "SCALA": "Runs on the JVM, functional programming",
+    "OBJECTIVEC": "Legacy Apple language for iOS/macOS",
+    "MATLAB": "Used for mathematical computations",
+    "DART": "Used to build Flutter apps"
   },
+
   fruits: {
     "APPLE": "Keeps the doctor away",
-    "BANANA": "A monkey’s favorite",
-    "CHERRY": "Small, red, and often on cakes",
-    "GRAPE": "Used to make wine",
-    "ORANGE": "A citrus fruit with vitamin C",
-    "PINEAPPLE": "Has a rough exterior and sweet inside",
-    "MANGO": "A fruit grew in the summer with a big seed in it",
-    "STRAWBERRY": "Winter fruit that is red"
+    "BANANA": "Long yellow fruit",
+    "CHERRY": "Small red fruit often on desserts",
+    "GRAPE": "Small purple or green, grows in bunches",
+    "ORANGE": "Citrus fruit, orange in color",
+    "PINEAPPLE": "Tropical fruit with spiky skin",
+    "MANGO": "King of fruits",
+    "STRAWBERRY": "Red, sweet and juicy",
+    "WATERMELON": "Big and watery, great for summer",
+    "BLUEBERRY": "Small and blue, often in muffins",
+    "RASPBERRY": "Tiny red berries, great for jams",
+    "PEACH": "Soft, fuzzy stone fruit",
+    "PLUM": "Purple stone fruit",
+    "KIWI": "Small brown fuzzy fruit",
+    "PAPAYA": "Tropical orange fruit, often used in smoothies",
+    "DATE": "Dates back to ancient times",
+    "LYCHEE": "Sweet tropical fruit with a rough skin",
+    "COCONUT": "Used for coconut water and milk",
+    "APRICOT": "Small orange stone fruit"
   },
+
   countries: {
-    "INDIA": "A ocean is named after this country",
-    "AMERICA": "Renouned for freedom",
+    "INDIA": "Country with Taj Mahal",
+    "AMERICA": "Known as the land of the free",
     "FRANCE": "Famous for the Eiffel Tower",
-    "RUSSIA": "A country both in Europe and Asia",
-    "BRAZIL": "Known for football and the Amazon rainforest",
-    "GERMANY": "Famous for cars and Oktoberfest",
-    "CANADA": "Maple syrup and polite people",
-    "JAPAN": "The sun rises here first"
+    "RUSSIA": "Largest country by landmass",
+    "BRAZIL": "Known for samba and carnival",
+    "GERMANY": "Famous for Oktoberfest",
+    "CANADA": "Second largest country by land",
+    "JAPAN": "Land of the rising sun",
+    "CHINA": "Most populous country",
+    "AUSTRALIA": "Island continent with unique wildlife",
+    "EGYPT": "Home of the pyramids",
+    "MEXICO": "Known for tacos and mariachi",
+    "SPAIN": "Known for flamenco dance",
+    "ITALY": "Home of the Colosseum",
+    "ARGENTINA": "Known for tango dance",
+    "NIGERIA": "Most populous country in Africa",
+    "THAILAND": "Known for elephants and beaches",
+    "SOUTHAFRICA": "Rainbow nation",
+    "COLOMBIA": "Known for coffee and the Amazon",
+    "PERU": "Famous for Machu Picchu"
   },
+
   animals: {
-    "TIGER": "Big striped cat",
-    "ELEPHANT": "Largest land animal",
-    "GIRAFFE": "Tallest animal",
+    "TIGER": "Striped big cat",
+    "ELEPHANT": "Largest land mammal",
+    "GIRAFFE": "Tallest land animal",
     "LION": "King of the jungle",
-    "HORSE": "Often used for riding and racing",
-    "PANDA": "Loves eating bamboo",
-    "ZEBRA": "Striped in black and white",
-    "DOLPHIN": "Smart marine mammal"
+    "HORSE": "Domesticated for riding",
+    "PANDA": "Black and white bear",
+    "ZEBRA": "Striped horse-like animal",
+    "DOLPHIN": "Intelligent marine mammal",
+    "KANGAROO": "Australian jumper",
+    "CROCODILE": "Large reptile with powerful jaws",
+    "LEOPARD": "Spotted big cat that’s fastest",
+    "CHEETAH": "Fastest land animal",
+    "SQUIRREL": "Small bushy-tailed rodent",
+    "OSTRICH": "Flightless bird from Africa",
+    "RHINOCEROS": "Horned giant herbivore",
+    "BUFFALO": "Large bovine with horns",
+    "WOLF": "Fierce wild dog",
+    "BEAR": "Large omnivorous mammal",
+    "MONKEY": "Primate known for intelligence"
   },
+
   school: {
-    "PENCIL": "Used to write and can be erased easily",
-    "ERASER": "Fixes mistakes",
-    "BOOK": "Full of knowledge",
-    "RULER": "Used to draw straight lines",
-    "SHARPENER": "Makes a pencil sharp",
-    "MARKER": "Used for writing on whiteboards",
-    "NOTEBOOK": "Used for taking notes",
-    "BACKPACK": "Carries everything taken to school"
+    "PENCIL": "Used for writing or drawing",
+    "ERASER": "Used to remove pencil marks",
+    "BOOK": "Place where you learn",
+    "RULER": "Used to measure length",
+    "SHARPENER": "Used to sharpen pencils",
+    "MARKER": "Used for writing with ink",
+    "NOTEBOOK": "Where you write notes",
+    "BACKPACK": "Carry your books in it",
+    "GLUE": "Used to stick paper together",
+    "SCISSORS": "Used for cutting paper",
+    "HIGHLIGHTER": "Used to highlight text",
+    "PROTRACTOR": "Used to measure angles",
+    "STAPLER": "Used to bind papers",
+    "TAPE": "Used to stick things and is durable",
+    "CRAYONS": "Used for coloring",
+    "FOLDER": "Used to organize papers",
+    "PEN": "Used to write and has ink",
   },
+
   sports: {
-    "CRICKET": "Popular in India and England",
-    "FOOTBALL": "Played with a ball and has goals",
-    "BASKETBALL": "Shoot hoops to score points",
-    "HOCKEY": "Played on ice or field",
-    "TENNIS": "Uses a racket and a yellow ball",
-    "BADMINTON": "Played with a shuttlecock",
-    "BASEBALL": "American sport with home runs",
-    "GOLF": "Played with clubs and small balls",
-    "SWIMMING": "A sport in the water",
-    "SKATING": "Boots with wheels",
-    "VOLLEYBALL": "Played with a net and ball",
-    "KARATE": "A martial art used for self defense"
+    "CRICKET": "Popular bat-and-ball game, mostly in India",
+    "FOOTBALL": "A popular game which involves kicking a ball",
+    "BASKETBALL": "Sport played with a hoop and ball",
+    "HOCKEY": "Played on ice with sticks",
+    "TENNIS": "Played with rackets on a court",
+    "BADMINTON": "Played with shuttlecock and rackets",
+    "BASEBALL": "Played with bat and ball on a diamond",
+    "GOLF": "Played on grass with clubs",
+    "SWIMMING": "Done in pools, involves strokes",
+    "SKATING": "Performed on ice with blades",
+    "VOLLEYBALL": "Played with a net and ball, indoors",
+    "KARATE": "Martial art from Japan",
+    "RUGBY": "Contact sport involving tackling",
+    "WRESTLING": "Combat sport with grappling",
+    "BOXING": "Combat sport with punches",
+    "CYCLING": "Sport on bicycles",
+    "DIVING": "Sport diving into water",
   },
-music: {
-  "PIANO": "Has black and white keys",
-  "GUITAR": "Has strings and is strummed",
-  "DRUMS": "Played by hitting with sticks",
-  "FLUTE": "A wind instrument",
-  "VIOLIN": "Played with a bow",
-  "TRUMPET": "A brass instrument played by blowing air",
-  "SAXOPHONE": "A jazz instrument with a curved shape",
-  "CELLO": "A large string instrument played sitting down",
-  "HARP": "An instrument with strings played by plucking",
-  "XYLOPHONE": "Has wooden bars",
-  "TROMBONE": "A brass instrument with a sliding tube",
-  "BASS": "A deep-sounding string instrument",
-  "SYNTHESIZER": "An electronic instrument used in pop music",
-  "ACCORDION": "An instrument played by compressing and expanding air"
-},
-    gadgets: {
-    "MOBILE": "A pocket sized device",
-    "LAPTOP": "A portable computer",
-    "TABLET": "A device that has a larger screen than a mobile",
-    "SMARTWATCH": "Smart device worn on the wrist",
-    "HEADPHONES": "Speakers on the head",
-    "CONSOLE": "PlayStation and Xbox are examples of this",
-    "DRONE": "A flying gadget",
-    "WEBCAM": "A camera extension for computers",
-    "PROJECTOR": "Displays screen of a device on a wall or white surface",
-    "HEADSET": "Makes you feel like you are inside a virtual world",
-    "SPEAKER": "Plays music",
-    "CAMERA": "Used to capture photos or videos"
+
+  music: {
+    "PIANO": "Keyboard instrument with black and white keys",
+    "GUITAR": "String instrument with six strings",
+    "DRUMS": "Instrument with drums and cymbals",
+    "FLUTE": "Woodwind instrument, often made of metal",
+    "VIOLIN": "String instrument played with a bow",
+    "TRUMPET": "Brass instrument played by buzzing lips",
+    "SAXOPHONE": "Woodwind instrument with a reed",
+    "CELLO": "Large string instrument played with a bow",
+    "HARP": "String instrument shaped like a triangular harp",
+    "XYLOPHONE": "Percussion instrument with wooden bars",
+    "TROMBONE": "Brass instrument with a slide",
+    "BASS": "Low-pitched string instrument",
+    "SYNTHESIZER": "Electronic keyboard instrument",
+    "ACCORDION": "Accordion-like bellows instrument",
+    "CLARINET": "Woodwind instrument with single reed",
+    "BANJO": "Banjo-like string instrument",
+    "MANDOLIN": "Small lute-like instrument",
   },
-  vehicles: {
-    "CAR": "A common four-wheeled vehicle for daily transport",
-    "MOTORCYCLE": "A two-wheeled vehicle known for speed and agility",
-    "CYCLE": "A manual vehicle powered by pedaling",
-    "AIRPLANE": "Needs a runway",
-    "HELICOPTER": "They land or takeoff vertically",
-    "TRUCK": "Used for transporting heavy goods",
-    "TRAIN": "Moves on tracks",
-    "SUBWAY": "An underground train system",
-    "SHIP": "A large water vehicle used for transport",
-    "YACHT": "A luxury boat",
-    "BUS": "A large vehicle that carries many passengers.",
-    "TRACTOR": "Used in farming to pull heavy loads.",
-    "TANK": "A heavily armored military vehicle."
+
+  gadgets: {
+    "MOBILE": "Handheld communication device",
+    "LAPTOP": "Portable computer",
+    "TABLET": "Touchscreen computing device",
+    "SMARTWATCH": "Wearable tech on the wrist",
+    "HEADPHONES": "Used for listening to audio privately",
+    "CONSOLE": "Gaming hardware which generally connects to a gamepad",
+    "DRONE": "Remote-controlled flying device",
+    "WEBCAM": "Device used for video calls",
+    "PROJECTOR": "Device for projecting images",
+    "HEADSET": "Audio device for communication",
+    "SPEAKER": "Device to amplify sound",
+    "CAMERA": "Device to capture photos",
+    "MICROPHONE": "Used to record sound",
+    "GAMEPAD": "Handheld controller for gaming",
+    "TELEVISION": "A large screen controlled with a remote",
+    "EARPHONE": "Wore in your ear",
+    "MONITOR": "Display screen"
+  },
+
+  transport: {
+    "CAR": "Four-wheeled motor vehicle",
+    "MOTORCYCLE": "Two-wheeled motor vehicle",
+    "CYCLE": "Pedal-powered two-wheeler",
+    "AIRPLANE": "Flying vehicle with wings",
+    "HELICOPTER": "Flying vehicle with rotors",
+    "TRUCK": "Large motor vehicle for cargo",
+    "TRAIN": "Rail vehicle",
+    "SUBWAY": "Underground electric train",
+    "SHIP": "Watercraft for seas",
+    "YACHT": "Luxury boat",
+    "BUS": "Large passenger vehicle",
+    "TRACTOR": "Farm vehicle for plowing",
+    "TANK": "Armored combat vehicle",
+    "SCOOTER": "Small two-wheeled scooter",
+    "JET": "Fast jet plane",
+    "FERRY": "Boat for passengers",
+    "VAN": "Vehicle for cargo or people",
+    "LIMOUSINE": "Luxury stretched car",
+    "SNOWMOBILE": "Vehicle for snow travel",
+    "BUGGY": "Small off-road vehicle"
   }
-
 };
-
 
 // Function to show hint 
 function showHint() {
@@ -420,23 +544,23 @@ function showHint() {
     let attempts = 6;
     const canvas = document.getElementById("hangmanCanvas");
     const ctx = canvas.getContext("2d");
-let lastWords = []; // Store the last 5 words
+let lastWords = []; // Store the last 3 words
 
 function startGame() {
   const category = document.getElementById("category").value;
   let words = wordCategories[category];
 
   if (words.length <= 5) { 
-    // If there are 5 or fewer words, just pick randomly (avoid infinite loop)
+    // If there are 3 or fewer words, just pick randomly (avoid infinite loop)
     chosenWord = words[Math.floor(Math.random() * words.length)];
   } else {
     do {
       chosenWord = words[Math.floor(Math.random() * words.length)];
-    } while (lastWords.includes(chosenWord)); // Ensure the word is not in the last 5
+    } while (lastWords.includes(chosenWord)); // Ensure the word is not in the last 3
   }
 
   lastWords.push(chosenWord); // Add new word to history
-  if (lastWords.length > 5) lastWords.shift(); // Keep only the last 5 words
+  if (lastWords.length > 5) lastWords.shift(); // Keep only the last 3 words
 
   guessedWord = Array(chosenWord.length).fill("_");
   attempts = 6;
