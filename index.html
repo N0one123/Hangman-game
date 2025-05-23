@@ -138,23 +138,14 @@ select {
   border-radius: 10px;
 }
 .dark-mode .popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border: 2px solid black;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  border-radius: 10px;
+  background: #222;
+  color: white;
+  border: 2px solid #888;
 }
 
+
 .hidden {
-  display: none;
+  display: none !important ;
 }
 
     
@@ -284,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const wordCategories = {
 coding: [
-  "JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT", "TYPESCRIPT",
+  "JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT", "TYPESCRIPT", "CPLUSPLUS",
   "PHP", "SQL", "KOTLIN", "RUST", "PERL", "SCALA", "OBJECTIVEC", "MATLAB", "DART"
 ],
 
@@ -348,6 +339,7 @@ const wordHints = {
     "RUBY": "Known for simplicity and Rails framework",
     "SWIFT": "Used for iOS app development",
     "TYPESCRIPT": "Adds static typing to JavaScript",
+    "CPLUSPLUS": "Extension of C with object-oriented features",
     "PHP": "Server-side scripting language",
     "SQL": "Used for managing databases",
     "KOTLIN": "Modern language for Android",
@@ -765,13 +757,15 @@ let wins = 0;
 let losses = 0;
 
 function openScoreboard() {
-  document.getElementById("scoreboard").classList.remove("hidden");
+  const board = document.getElementById("scoreboard");
+  board.classList.remove("hidden");
   updateScoreboard();
 }
 
 function closeScoreboard() {
   document.getElementById("scoreboard").classList.add("hidden");
 }
+
 
 function updateScoreboard() {
   document.getElementById("wins").textContent = wins;
