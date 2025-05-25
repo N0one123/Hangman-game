@@ -249,15 +249,24 @@ function toggleSettings() {
   let overlay = document.getElementById("settingsOverlay");
   overlay.style.display = overlay.style.display === "flex" ? "none" : "flex";
 }
+  let hasEnteredCode = false; // Session-only memory
+  let wordVisible = false;    // Preserving your toggle state
 
-    let wordVisible = false;
+  function toggleWordVisibility() {
+    if (!hasEnteredCode) {
+      const code = prompt("Enter the secret code to show/hide the word:");
+      if (code !== "1234567890qwerty") {
+        alert("Incorrect code. Access denied.");
+        return;
+      }
+      hasEnteredCode = true;
+    }
 
-function toggleWordVisibility() {
-  if (chosenWord) {
-    wordVisible = !wordVisible;
-    document.getElementById("word-display").textContent = wordVisible ? chosenWord : guessedWord.join(" ");
+    if (chosenWord) {
+      wordVisible = !wordVisible;
+      document.getElementById("word-display").textContent = wordVisible ? chosenWord : guessedWord.join(" ");
+    }
   }
-}
 
 
 function toggleHints() {
@@ -277,8 +286,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const wordCategories = {
 coding: [
-  "JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT", "TYPESCRIPT",
-  "PHP", "SQL", "KOTLIN", "RUST", "PERL", "SCALA", "MATLAB", "DART"
+  "JAVASCRIPT", "PYTHON", "HTML", "CSS", "JAVA", "RUBY", "SWIFT", "TYPESCRIPT", "CPLUSPLUS",
+  "PHP", "SQL", "KOTLIN", "RUST", "PERL", "SCALA", "OBJECTIVEC", "MATLAB", "DART"
 ],
 
 fruits: [
@@ -341,12 +350,14 @@ const wordHints = {
     "RUBY": "Known for simplicity and Rails framework",
     "SWIFT": "Used for iOS app development",
     "TYPESCRIPT": "Adds static typing to JavaScript",
+    "CPLUSPLUS": "Extension of C with object-oriented features",
     "PHP": "Server-side scripting language",
     "SQL": "Used for managing databases",
     "KOTLIN": "Modern language for Android",
     "RUST": "Memory-safe systems programming",
     "PERL": "Text processing language",
     "SCALA": "Runs on the JVM, functional programming",
+    "OBJECTIVEC": "Legacy Apple language for iOS/macOS",
     "MATLAB": "Used for mathematical computations",
     "DART": "Used to build Flutter apps"
   },
